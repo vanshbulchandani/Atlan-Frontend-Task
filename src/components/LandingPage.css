@@ -1,6 +1,7 @@
 .landing-page {
   min-height: 100vh;
-  background-color: #f5f5f5;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
   transition: background-color 0.3s, color 0.3s;
 }
@@ -15,8 +16,8 @@
   justify-content: space-between;
   align-items: center;
   padding: 1rem 2rem;
-  background-color: white;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  background-color: var(--bg-secondary);
+  border-bottom: 1px solid var(--border-color);
   transition: background-color 0.3s;
 }
 
@@ -26,9 +27,9 @@
 }
 
 .logo {
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: #333;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--text-primary);
   transition: color 0.3s;
 }
 
@@ -36,7 +37,7 @@
   color: #fff;
 }
 
-.nav-buttons {
+.nav-controls {
   display: flex;
   gap: 1rem;
   align-items: center;
@@ -62,23 +63,24 @@
 
 .launch-button {
   padding: 0.5rem 1rem;
-  background-color: #0ea5e9;
+  background-color: var(--accent-primary);
   color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1rem;
   text-decoration: none;
-  border-radius: 4px;
-  font-size: 0.875rem;
-  transition: background-color 0.2s;
+  transition: opacity 0.2s ease;
 }
 
 .launch-button:hover {
-  background-color: #0284c7;
+  opacity: 0.9;
 }
 
 .hero-section {
   text-align: center;
   padding: 4rem 2rem;
-  background: linear-gradient(135deg, #0ea5e9, #0369a1);
-  color: white;
+  background-color: var(--bg-primary);
   transition: background 0.3s;
 }
 
@@ -88,43 +90,45 @@
 
 .hero-section h1 {
   font-size: 2.5rem;
-  font-weight: 600;
   margin-bottom: 1rem;
+  color: var(--text-primary);
 }
 
 .hero-section p {
-  font-size: 1.125rem;
+  font-size: 1.2rem;
+  color: var(--text-secondary);
   margin-bottom: 2rem;
-  line-height: 1.6;
-  opacity: 0.9;
 }
 
 .get-started-button {
-  display: inline-block;
-  padding: 0.75rem 1.5rem;
-  background-color: #22c55e;
+  padding: 0.75rem 2rem;
+  font-size: 1.1rem;
+  background-color: var(--accent-primary);
   color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
   text-decoration: none;
-  border-radius: 4px;
-  font-weight: 500;
-  transition: background-color 0.2s;
+  transition: opacity 0.2s ease;
 }
 
 .get-started-button:hover {
-  background-color: #16a34a;
+  opacity: 0.9;
 }
 
 .features-section {
   padding: 4rem 2rem;
+  background-color: var(--bg-secondary);
   text-align: center;
   width: 100%;
   overflow-x: hidden;
 }
 
 .features-section h2 {
+  text-align: center;
   font-size: 2rem;
-  color: #333;
   margin-bottom: 3rem;
+  color: var(--text-primary);
   transition: color 0.3s;
 }
 
@@ -133,22 +137,20 @@
 }
 
 .features-grid {
-  display: flex;
-  justify-content: center;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 2rem;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 1rem 2rem;
 }
 
 .feature-card {
-  background-color: white;
+  background-color: var(--bg-primary);
   padding: 2rem;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-  transition: transform 0.2s, background-color 0.3s, box-shadow 0.3s;
-  width: 250px;
-  flex-shrink: 0;
+  text-align: center;
+  border: 1px solid var(--border-color);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .dark-mode .feature-card {
@@ -157,7 +159,8 @@
 }
 
 .feature-card:hover {
-  transform: translateY(-4px);
+  transform: translateY(-5px);
+  box-shadow: var(--card-shadow);
 }
 
 .feature-icon {
@@ -166,9 +169,9 @@
 }
 
 .feature-card h3 {
-  font-size: 1.25rem;
-  color: #333;
-  margin-bottom: 0.75rem;
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+  color: var(--text-primary);
   transition: color 0.3s;
 }
 
@@ -177,7 +180,7 @@
 }
 
 .feature-card p {
-  color: #666;
+  color: var(--text-secondary);
   line-height: 1.5;
   font-size: 0.875rem;
   transition: color 0.3s;
@@ -197,11 +200,7 @@
   }
 
   .features-grid {
-    flex-direction: column;
+    grid-template-columns: 1fr;
     padding: 0 1rem;
-  }
-
-  .feature-card {
-    width: 100%;
   }
 }

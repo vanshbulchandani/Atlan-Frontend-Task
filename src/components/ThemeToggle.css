@@ -1,0 +1,23 @@
+.theme-toggle {
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  color: var(--text-primary);
+}
+
+.theme-toggle:hover {
+  background: var(--hover-bg);
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+} 

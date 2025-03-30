@@ -1,7 +1,10 @@
 import React, { useState } from "react";
 import AceEditor from "react-ace";
+import ThemeToggle from "./ThemeToggle";
+import { useTheme } from "../context/ThemeContext";
 import "ace-builds/src-noconflict/mode-sql";
 import "ace-builds/src-noconflict/theme-github";
+import "ace-builds/src-noconflict/theme-dracula";
 import "./QueryRunner.css";
 
 const PREDEFINED_QUERIES = [
@@ -86,6 +89,7 @@ const MOCK_RESULTS = {
 };
 
 const QueryRunner = () => {
+  const { isDarkMode } = useTheme();
   const [activeTab, setActiveTab] = useState("Predefined");
   const [selectedQuery, setSelectedQuery] = useState(PREDEFINED_QUERIES[3]);
   const [query, setQuery] = useState(PREDEFINED_QUERIES[3].query);
@@ -95,6 +99,8 @@ const QueryRunner = () => {
   const [loading, setLoading] = useState(false);
   const [executionTime, setExecutionTime] = useState(null);
   const [copySuccess, setCopySuccess] = useState(false);
+  const [favorites, setFavorites] = useState([]);
+  const [queryHistory, setQueryHistory] = useState([]);
 
   const handleQuerySelect = (query) => {
     setSelectedQuery(query);
@@ -104,6 +110,14 @@ const QueryRunner = () => {
   const handleExecute = () => {
     setLoading(true);
     const startTime = Date.now();
+
+    // Add query to history
+    const historyItem = {
+      query: query,
+      timestamp: new Date().toISOString(),
+      title: selectedQuery?.title || "Custom Query",
+    };
+    setQueryHistory((prev) => [historyItem, ...prev]);
 
     setTimeout(() => {
       setResults(MOCK_RESULTS["Customer Order History"]);
@@ -146,6 +160,21 @@ const QueryRunner = () => {
     });
   };
 
+  const toggleFavorite = (query) => {
+    setFavorites((prev) => {
+      const exists = prev.find((f) => f.title === query.title);
+      if (exists) {
+        return prev.filter((f) => f.title !== query.title);
+      } else {
+        return [...prev, query];
+      }
+    });
+  };
+
+  const isFavorite = (query) => {
+    return favorites.some((f) => f.title === query.title);
+  };
+
   return (
     <div className="app-container">
       <div className="sidebar">
@@ -175,24 +204,76 @@ const QueryRunner = () => {
         </div>
 
         <div className="query-list">
-          {PREDEFINED_QUERIES.map((q, index) => (
-            <div
-              key={index}
-              className="query-item"
-              onClick={() => handleQuerySelect(q)}
-            >
-              <div>
-                <div className="query-item-title">{q.title}</div>
-                <div className="query-item-description">{q.description}</div>
+          {activeTab === "Predefined" &&
+            PREDEFINED_QUERIES.map((q, index) => (
+              <div key={index} className="query-item">
+                <div onClick={() => handleQuerySelect(q)}>
+                  <div className="query-item-title">
+                    {q.title}
+                    <span
+                      className="favorite-star"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        toggleFavorite(q);
+                      }}
+                    >
+                      {isFavorite(q) ? "⭐" : "☆"}
+                    </span>
+                  </div>
+                  <div className="query-item-description">{q.description}</div>
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+
+          {activeTab === "Favorites" &&
+            favorites.map((q, index) => (
+              <div
+                key={index}
+                className="query-item"
+                onClick={() => handleQuerySelect(q)}
+              >
+                <div>
+                  <div className="query-item-title">
+                    {q.title}
+                    <span
+                      className="favorite-star"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        toggleFavorite(q);
+                      }}
+                    >
+                      ⭐
+                    </span>
+                  </div>
+                  <div className="query-item-description">{q.description}</div>
+                </div>
+              </div>
+            ))}
+
+          {activeTab === "History" &&
+            queryHistory.map((item, index) => (
+              <div
+                key={index}
+                className="query-item"
+                onClick={() => setQuery(item.query)}
+              >
+                <div>
+                  <div className="query-item-title">{item.title}</div>
+                  <div className="query-item-description">
+                    {new Date(item.timestamp).toLocaleString()}
+                  </div>
+                </div>
+              </div>
+            ))}
         </div>
       </div>
 
       <div className="main-content">
         <div className="header">
-          <h1>SQL Query Runner</h1>
+          <div className="header-content">
+            <h1>SQL Query Runner</h1>
+            <ThemeToggle />
+          </div>
         </div>
 
         <div className="editor-section">
@@ -203,13 +284,13 @@ const QueryRunner = () => {
               onClick={handleCopyQuery}
               title="Copy query to clipboard"
             >
-              {copySuccess ? "Copied!" : "Copy 📋"}
+              {copySuccess ? "Copied!" : "📋"}
             </button>
           </div>
           <div className="editor-container">
             <AceEditor
               mode="sql"
-              theme="github"
+              theme={isDarkMode ? "dracula" : "github"}
               value={query}
               onChange={setQuery}
               name="sql-editor"
@@ -224,6 +305,8 @@ const QueryRunner = () => {
                 enableBasicAutocompletion: true,
                 enableLiveAutocompletion: true,
                 enableSnippets: true,
+                showLineNumbers: true,
+                tabSize: 2,
               }}
             />
           </div>

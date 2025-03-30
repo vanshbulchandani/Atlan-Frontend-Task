@@ -1,33 +1,22 @@
-import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import { useTheme } from "../context/ThemeContext";
+import ThemeToggle from "./ThemeToggle";
 import "./LandingPage.css";
 
 const LandingPage = () => {
-  const [darkMode, setDarkMode] = useState(false);
-
-  useEffect(() => {
-    if (darkMode) {
-      document.body.classList.add("dark-mode");
-    } else {
-      document.body.classList.remove("dark-mode");
-    }
-  }, [darkMode]);
+  const navigate = useNavigate();
+  const { isDarkMode } = useTheme();
 
   return (
-    <div className={`landing-page ${darkMode ? "dark-mode" : ""}`}>
+    <div className="landing-page">
       <nav className="nav-bar">
         <div className="logo">SQL Query Runner</div>
-        <div className="nav-buttons">
-          <button
-            className="theme-toggle"
-            onClick={() => setDarkMode(!darkMode)}
-            aria-label="Toggle dark mode"
-          >
-            {darkMode ? "🌞" : "🌙"}
-          </button>
-          <Link to="/query" className="launch-button">
+        <div className="nav-controls">
+          <ThemeToggle />
+          <button className="launch-button" onClick={() => navigate("/query")}>
             Launch App
-          </Link>
+          </button>
         </div>
       </nav>
 
@@ -38,9 +27,12 @@ const LandingPage = () => {
           <br />
           favorites, and execution history.
         </p>
-        <Link to="/query" className="get-started-button">
+        <button
+          className="get-started-button"
+          onClick={() => navigate("/query")}
+        >
           Get Started
-        </Link>
+        </button>
       </div>
 
       <div className="features-section">
