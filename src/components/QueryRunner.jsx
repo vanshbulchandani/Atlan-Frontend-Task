@@ -101,6 +101,13 @@ const QueryRunner = () => {
   const [copySuccess, setCopySuccess] = useState(false);
   const [favorites, setFavorites] = useState([]);
   const [queryHistory, setQueryHistory] = useState([]);
+  const [userQueries, setUserQueries] = useState([]);
+  const [showAddQueryModal, setShowAddQueryModal] = useState(false);
+  const [newQuery, setNewQuery] = useState({
+    title: "",
+    description: "",
+    query: "",
+  });
 
   const handleQuerySelect = (query) => {
     setSelectedQuery(query);
@@ -175,6 +182,70 @@ const QueryRunner = () => {
     return favorites.some((f) => f.title === query.title);
   };
 
+  const handleAddQuery = () => {
+    if (!newQuery.title || !newQuery.description || !newQuery.query) {
+      alert("Please fill in all fields");
+      return;
+    }
+
+    const queryToAdd = {
+      ...newQuery,
+      id: Date.now(), // Unique identifier
+    };
+
+    setUserQueries((prev) => [...prev, queryToAdd]);
+    setShowAddQueryModal(false);
+    setNewQuery({ title: "", description: "", query: "" });
+  };
+
+  const handleDeleteQuery = (queryId) => {
+    setUserQueries((prev) => prev.filter((q) => q.id !== queryId));
+    // Also remove from favorites if it's there
+    setFavorites((prev) => prev.filter((q) => q.id !== queryId));
+  };
+
+  const renderQueryList = () => {
+    const queries =
+      activeTab === "Predefined"
+        ? [...PREDEFINED_QUERIES, ...userQueries]
+        : activeTab === "Favorites"
+        ? favorites
+        : queryHistory;
+
+    return queries.map((q, index) => (
+      <div key={q.id || index} className="query-item">
+        <div onClick={() => handleQuerySelect(q)}>
+          <div className="query-item-title">
+            {q.title}
+            {activeTab === "Predefined" && (
+              <span
+                className="favorite-star"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  toggleFavorite(q);
+                }}
+              >
+                {isFavorite(q) ? "⭐" : "☆"}
+              </span>
+            )}
+          </div>
+          <div className="query-item-description">{q.description}</div>
+        </div>
+        {activeTab === "Predefined" && q.id && (
+          <button
+            className="delete-query-button"
+            onClick={(e) => {
+              e.stopPropagation();
+              handleDeleteQuery(q.id);
+            }}
+          >
+            🗑️
+          </button>
+        )}
+      </div>
+    ));
+  };
+
   return (
     <div className="app-container">
       <div className="sidebar">
@@ -203,69 +274,16 @@ const QueryRunner = () => {
           </span>
         </div>
 
-        <div className="query-list">
-          {activeTab === "Predefined" &&
-            PREDEFINED_QUERIES.map((q, index) => (
-              <div key={index} className="query-item">
-                <div onClick={() => handleQuerySelect(q)}>
-                  <div className="query-item-title">
-                    {q.title}
-                    <span
-                      className="favorite-star"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        toggleFavorite(q);
-                      }}
-                    >
-                      {isFavorite(q) ? "⭐" : "☆"}
-                    </span>
-                  </div>
-                  <div className="query-item-description">{q.description}</div>
-                </div>
-              </div>
-            ))}
+        {activeTab === "Predefined" && (
+          <button
+            className="add-query-button"
+            onClick={() => setShowAddQueryModal(true)}
+          >
+            + Add New Query
+          </button>
+        )}
 
-          {activeTab === "Favorites" &&
-            favorites.map((q, index) => (
-              <div
-                key={index}
-                className="query-item"
-                onClick={() => handleQuerySelect(q)}
-              >
-                <div>
-                  <div className="query-item-title">
-                    {q.title}
-                    <span
-                      className="favorite-star"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        toggleFavorite(q);
-                      }}
-                    >
-                      ⭐
-                    </span>
-                  </div>
-                  <div className="query-item-description">{q.description}</div>
-                </div>
-              </div>
-            ))}
-
-          {activeTab === "History" &&
-            queryHistory.map((item, index) => (
-              <div
-                key={index}
-                className="query-item"
-                onClick={() => setQuery(item.query)}
-              >
-                <div>
-                  <div className="query-item-title">{item.title}</div>
-                  <div className="query-item-description">
-                    {new Date(item.timestamp).toLocaleString()}
-                  </div>
-                </div>
-              </div>
-            ))}
-        </div>
+        <div className="query-list">{renderQueryList()}</div>
       </div>
 
       <div className="main-content">
@@ -356,6 +374,69 @@ const QueryRunner = () => {
           )}
         </div>
       </div>
+
+      {showAddQueryModal && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <h2>Add New Query</h2>
+            <div className="modal-form">
+              <div className="form-group">
+                <label>Title</label>
+                <input
+                  type="text"
+                  value={newQuery.title}
+                  onChange={(e) =>
+                    setNewQuery({ ...newQuery, title: e.target.value })
+                  }
+                  placeholder="Enter query title"
+                />
+              </div>
+              <div className="form-group">
+                <label>Description</label>
+                <textarea
+                  value={newQuery.description}
+                  onChange={(e) =>
+                    setNewQuery({ ...newQuery, description: e.target.value })
+                  }
+                  placeholder="Enter query description"
+                />
+              </div>
+              <div className="form-group">
+                <label>Query</label>
+                <AceEditor
+                  mode="sql"
+                  theme={isDarkMode ? "dracula" : "github"}
+                  value={newQuery.query}
+                  onChange={(value) =>
+                    setNewQuery({ ...newQuery, query: value })
+                  }
+                  name="new-query-editor"
+                  width="100%"
+                  height="150px"
+                  fontSize={14}
+                  showPrintMargin={false}
+                  setOptions={{
+                    enableBasicAutocompletion: true,
+                    enableLiveAutocompletion: true,
+                    enableSnippets: true,
+                  }}
+                />
+              </div>
+            </div>
+            <div className="modal-actions">
+              <button
+                className="cancel-button"
+                onClick={() => setShowAddQueryModal(false)}
+              >
+                Cancel
+              </button>
+              <button className="save-button" onClick={handleAddQuery}>
+                Save Query
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
