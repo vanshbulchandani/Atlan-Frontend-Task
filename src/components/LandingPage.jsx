@@ -63,6 +63,11 @@ const LandingPage = () => {
             <h3>Dark Mode</h3>
             <p>Switch between light and dark themes for comfortable viewing</p>
           </div>
+          <div className="feature-card">
+            <div className="feature-icon">✨</div>
+            <h3>Custom Queries</h3>
+            <p>Create and save your own SQL queries for future use</p>
+          </div>
         </div>
       </div>
     </div>
