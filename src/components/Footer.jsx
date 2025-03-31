@@ -4,17 +4,17 @@ const Footer = () => {
   const [showFooter, setShowFooter] = useState(false);
 
   const footerStyle = {
-    backgroundColor: "var(--background-color)",
-    color: "var(--text-color)",
+    backgroundColor: "#2563eb", // Rich blue background
+    color: "#ffffff", // White text
     padding: "1rem",
     textAlign: "center",
     width: "100%",
-    borderTop: "1px solid var(--border-color)",
     fontSize: "0.9rem",
     opacity: showFooter ? "1" : "0",
+    transition: "all 0.3s ease",
     transition: "opacity 0.3s ease",
     position: "static", // Changed from fixed to static
-    marginTop: "2rem", // Add some space above footer
+    // marginTop: "2rem", // Add some space above footer
   };
 
   const linkStyle = {
