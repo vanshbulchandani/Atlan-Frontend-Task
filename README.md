@@ -1,100 +1,88 @@
-# React + Vite
+# 📊 Atlan Frontend Internship Task 2025
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Overview
 
-Currently, two official plugins are available:
+This project is a web-based SQL query application designed for Atlan's frontend internship task. The application allows users to input SQL queries, execute them (mocked results), and view the output in a structured table format. The application is built using React and optimized for performance.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🔧 Tech Stack
 
-# SQL Query Runner
+- Framework: React
+- Styling: CSS
+- Hosting: Netlify
+- Libraries Used:
+  - Ace Editor (ace-builds, react-ace) for SQL query input
+  - React Router (react-router-dom) for navigation
+  - Vite for fast builds and development environment
 
-A modern, feature-rich SQL query execution interface built with React. This application provides a user-friendly environment for writing, executing, and managing SQL queries with advanced features like dark mode, query history, and data visualization.
+## 🚀 Features
 
-## 🔗 Live Demo
+- Execute Predefined Queries: Run a set of predefined SQL queries and view the results instantly.
+- Query Management: Users can manage their SQL queries, edit them, and organize them efficiently.
+- Toggle Between Dark & Light Mode: Supports a theme switcher for user preference.
+- Favorite Queries: Users can add frequently used queries to their favorites for quick access.
+- Query History: Users can view and revisit previously executed queries for reference and reuse.
+- Copy Query Functionality: Easily copy queries with a single click for reuse.
+- Random Data Generator: Generates mock data dynamically for executing queries.
+- Export Data: Allows users to export query results in CSV.
+- Predefined Query Selection: Users can toggle between predefined queries .
+- Optimized UI/UX: Ensures smooth navigation and efficient rendering for the best user experience.
 
-Try out the application: [SQL Query Runner](https://sqleditor123.netlify.app/)
+## 📊 Application Architecture
 
-## 🌟 Features
+### ER Diagram
 
-### 1. Modern User Interface
+![ER Diagram](./images/ER-DIAGRAM.png)
 
-- Clean and intuitive design
-- Responsive layout that works on all devices
-- Smooth transitions and animations
-- Auto-scrolling features showcase
-- Professional landing page
+### Flow Diagram
 
-### 2. Advanced Query Editor
+![Flow Diagram](./images/Flow-diagram.png)
 
-- Syntax highlighting for SQL
-- Auto-completion support
-- Line numbering
-- Multiple theme support
-- Copy query functionality
-- Query execution with results preview
+## ⚡️ Performance Analysis
 
-### 3. Query Management
+The performance of the application was analyzed using Google Lighthouse and Chrome DevTools. The key metrics measured include:
 
-- Predefined query templates
-- Custom query creation and storage
-- Query favorites system
-- Query history tracking
-- Search functionality for queries
-- Delete and modify user-created queries
+### Page Load Time
 
-### 4. Results Handling
+- Landing page Load Time: [985 ms]
+- Editor page Load Time: [1.90 s]
+- Measured using Lighthouse performance audits in Incognito mode
 
-- Efficient display of large datasets using virtualization
-- Support for displaying 10,000+ rows without performance issues
-- Export results to CSV
-- Execution time tracking
-- Clear error handling
+### Optimizations Implemented
 
-### 5. Theme Support
+To enhance performance and reduce page load time, the following optimizations were made:
 
-- Full dark mode implementation
-- System preference detection
-- Persistent theme selection
-- Smooth theme transitions
-- Consistent styling across all components
+- Optimized Asset Delivery: Compressed images and minimized CSS/JS files.
+- Efficient State Management: Used minimal re-renders and efficient state handling.
+- CDN Caching: Leveraged hosting platform's built-in caching for faster content delivery.
+- Minimal Dependencies: Avoided unnecessary third-party libraries to keep the bundle size small.
 
-### 6. Data Organization
+## 📸 Screenshots
 
-- Sidebar navigation
-- Categorized queries (Predefined, Favorites, History)
-- Easy access to frequently used queries
-- Clean visualization of query results
+### Lighthouse Performance Report
 
-## 🚀 Getting Started
+![Lighthouse Report - Homepage](./images/homepage-preformance.png)
+![Lighthouse Report - Editor](./images/editor-performance.png)
 
-1. Clone the repository:
+## 📜 Submission Details
 
-```bash
-git clone https://github.com/yourusername/sql-query-runner.git
-```
+- GitHub Repository: https://github.com/vanshbulchandani/frontend-2025-test
+- Live Demo: https://sqleditor123.netlify.app/
+- Architecture Diagram & Documentation: [Provide relevant links]
+- Video Walkthrough: [Provide video link]
 
-2. Install dependencies:
+## ✅ Judging Criteria Considerations
 
-```bash
-cd sql-query-runner
-npm install
-```
+- Thoughtful feature planning & implementation
+- Performance optimization & low load time
+- Code structure, readability, and maintainability
+- Smooth user experience with minimal lag
 
-3. Start the development server:
+## 🏆 Brownie Points Achieved
 
-```bash
-npm start
-```
+- Efficient handling of large datasets without browser crashes
+- Smooth query toggling mechanism
+- Optimized rendering techniques for performance boost
 
-4. Open [http://localhost:3000](http://localhost:3000) in your browser
+---
 
-## 🛠️ Technologies Used
-
-- **React**: Frontend framework
-- **react-ace**: SQL editor with syntax highlighting
-- **react-window**: Virtualized table for efficient rendering
-- **CSS Variables**: Theme management
-- **Local Storage**: Persistence of user preferences and queries
-
-## 📦 Project Structure
+Note: This is a dummy application and does not have a real backend or actual query execution engine. It is designed for evaluation purposes only.
