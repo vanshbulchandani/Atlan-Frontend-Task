@@ -16,16 +16,16 @@ This project is a web-based SQL query application designed for Atlan's frontend 
 
 ## 🚀 Features
 
-- Execute Predefined Queries: Run a set of predefined SQL queries and view the results instantly.
-- Query Management: Users can manage their SQL queries, edit them, and organize them efficiently.
-- Toggle Between Dark & Light Mode: Supports a theme switcher for user preference.
-- Favorite Queries: Users can add frequently used queries to their favorites for quick access.
-- Query History: Users can view and revisit previously executed queries for reference and reuse.
-- Copy Query Functionality: Easily copy queries with a single click for reuse.
-- Random Data Generator: Generates mock data dynamically for executing queries.
-- Export Data: Allows users to export query results in CSV.
-- Predefined Query Selection: Users can toggle between predefined queries .
-- Optimized UI/UX: Ensures smooth navigation and efficient rendering for the best user experience.
+- **Execute Predefined Queries**: Run a set of predefined SQL queries and view the results instantly.
+- **Query Management**: Users can manage their SQL queries, edit them, and organize them efficiently.
+- **Toggle Between Dark & Light Mode**: Supports a theme switcher for user preference.
+- **Favorite Queries**: Users can add frequently used queries to their favorites for quick access.
+- **Query History**: Users can view and revisit previously executed queries for reference and reuse.
+- **Copy Query Functionality**: Easily copy queries with a single click for reuse.
+- **Random Data Generator**: Generates mock data dynamically for executing queries.
+- **Export Data**: Allows users to export query results in CSV.
+- **Predefined Query Selection**: Users can toggle between predefined queries.
+- **Optimized UI/UX**: Ensures smooth navigation and efficient rendering for the best user experience.
 
 ## 📊 Application Architecture
 
