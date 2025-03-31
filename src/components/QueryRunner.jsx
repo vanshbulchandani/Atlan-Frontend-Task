@@ -40,51 +40,128 @@ const PREDEFINED_QUERIES = [
 ];
 
 const MOCK_RESULTS = {
+  "Select All Customers": {
+    columns: [
+      "customer_id",
+      "name",
+      "email",
+      "country",
+      "join_date",
+      "orders_count",
+      "total_spent",
+    ],
+    rows: Array.from({ length: 1000 }, (_, i) => ({
+      customer_id: i + 1,
+      name: `Customer ${i + 1}`,
+      email: `customer${i + 1}@example.com`,
+      country: ["USA", "UK", "Canada", "Australia", "Germany"][
+        Math.floor(Math.random() * 5)
+      ],
+      join_date: new Date(
+        Date.now() - Math.random() * 1000 * 60 * 60 * 24 * 365 * 2
+      )
+        .toISOString()
+        .split("T")[0],
+      orders_count: Math.floor(Math.random() * 50),
+      total_spent: (Math.random() * 10000).toFixed(2),
+    })),
+  },
+
+  "Top Products by Revenue": {
+    columns: [
+      "product_id",
+      "name",
+      "category",
+      "revenue",
+      "units_sold",
+      "avg_rating",
+    ],
+    rows: Array.from({ length: 500 }, (_, i) => ({
+      product_id: i + 1,
+      name: `Product ${i + 1}`,
+      category: ["Electronics", "Clothing", "Books", "Home", "Sports"][
+        Math.floor(Math.random() * 5)
+      ],
+      revenue: (Math.random() * 1000000).toFixed(2),
+      units_sold: Math.floor(Math.random() * 10000),
+      avg_rating: (3 + Math.random() * 2).toFixed(1),
+    })),
+  },
+
+  "Monthly Sales Analysis": {
+    columns: [
+      "month",
+      "total_orders",
+      "revenue",
+      "avg_order_value",
+      "new_customers",
+    ],
+    rows: Array.from({ length: 24 }, (_, i) => {
+      const date = new Date();
+      date.setMonth(date.getMonth() - i);
+      return {
+        month: date.toLocaleString("default", {
+          month: "long",
+          year: "numeric",
+        }),
+        total_orders: Math.floor(Math.random() * 10000),
+        revenue: (Math.random() * 1000000).toFixed(2),
+        avg_order_value: (Math.random() * 200 + 50).toFixed(2),
+        new_customers: Math.floor(Math.random() * 1000),
+      };
+    }),
+  },
+
   "Customer Order History": {
     columns: [
       "order_id",
       "order_date",
+      "items",
       "total_amount",
       "status",
-      "total_items",
+      "shipping_address",
     ],
-    rows: [
-      {
-        order_id: 1089,
-        order_date: "2023-11-15",
-        total_amount: 325.5,
-        status: "Delivered",
-        total_items: 3,
-      },
-      {
-        order_id: 956,
-        order_date: "2023-09-22",
-        total_amount: 189.95,
-        status: "Delivered",
-        total_items: 2,
-      },
-      {
-        order_id: 842,
-        order_date: "2023-07-10",
-        total_amount: 450.25,
-        status: "Delivered",
-        total_items: 4,
-      },
-      {
-        order_id: 731,
-        order_date: "2023-05-03",
-        total_amount: 275.0,
-        status: "Delivered",
-        total_items: 3,
-      },
-      {
-        order_id: 625,
-        order_date: "2023-03-18",
-        total_amount: 125.75,
-        status: "Delivered",
-        total_items: 1,
-      },
+    rows: Array.from({ length: 750 }, (_, i) => ({
+      order_id: 1000000 + i,
+      order_date: new Date(
+        Date.now() - Math.random() * 1000 * 60 * 60 * 24 * 365
+      )
+        .toISOString()
+        .split("T")[0],
+      items: Math.floor(Math.random() * 10) + 1,
+      total_amount: (Math.random() * 500 + 20).toFixed(2),
+      status: ["Delivered", "Shipped", "Processing", "Cancelled"][
+        Math.floor(Math.random() * 4)
+      ],
+      shipping_address: `${Math.floor(
+        Math.random() * 9999
+      )} Main St, City ${Math.floor(Math.random() * 100)}`,
+    })),
+  },
+
+  "Inventory Status Report": {
+    columns: [
+      "sku",
+      "product_name",
+      "current_stock",
+      "reorder_point",
+      "supplier",
+      "last_restock_date",
+      "status",
     ],
+    rows: Array.from({ length: 600 }, (_, i) => ({
+      sku: `SKU${String(i + 1).padStart(6, "0")}`,
+      product_name: `Product ${i + 1}`,
+      current_stock: Math.floor(Math.random() * 1000),
+      reorder_point: 100,
+      supplier: `Supplier ${Math.floor(Math.random() * 20) + 1}`,
+      last_restock_date: new Date(
+        Date.now() - Math.random() * 1000 * 60 * 60 * 24 * 30
+      )
+        .toISOString()
+        .split("T")[0],
+      status: Math.random() > 0.7 ? "Restock needed" : "OK",
+    })),
   },
 };
 
@@ -93,9 +170,7 @@ const QueryRunner = () => {
   const [activeTab, setActiveTab] = useState("Predefined");
   const [selectedQuery, setSelectedQuery] = useState(PREDEFINED_QUERIES[3]);
   const [query, setQuery] = useState(PREDEFINED_QUERIES[3].query);
-  const [results, setResults] = useState(
-    MOCK_RESULTS["Customer Order History"]
-  );
+  const [results, setResults] = useState(null);
   const [loading, setLoading] = useState(false);
   const [executionTime, setExecutionTime] = useState(null);
   const [copySuccess, setCopySuccess] = useState(false);
@@ -104,6 +179,12 @@ const QueryRunner = () => {
   const [userQueries, setUserQueries] = useState([]);
   const [showAddQueryModal, setShowAddQueryModal] = useState(false);
   const [newQuery, setNewQuery] = useState({
+    title: "",
+    description: "",
+    query: "",
+  });
+  const [showSaveModal, setShowSaveModal] = useState(false);
+  const [customQuery, setCustomQuery] = useState({
     title: "",
     description: "",
     query: "",
@@ -204,6 +285,31 @@ const QueryRunner = () => {
     setFavorites((prev) => prev.filter((q) => q.id !== queryId));
   };
 
+  const handleSaveClick = () => {
+    setCustomQuery({
+      title: "",
+      description: "",
+      query: query, // Current query from the editor
+    });
+    setShowSaveModal(true);
+  };
+
+  const handleSaveCustomQuery = () => {
+    if (!customQuery.title) {
+      alert("Please enter a name for your query");
+      return;
+    }
+
+    const queryToSave = {
+      ...customQuery,
+      id: Date.now(),
+    };
+
+    setUserQueries((prev) => [...prev, queryToSave]);
+    setFavorites((prev) => [...prev, queryToSave]);
+    setShowSaveModal(false);
+  };
+
   const renderQueryList = () => {
     const queries =
       activeTab === "Predefined"
@@ -244,6 +350,52 @@ const QueryRunner = () => {
         )}
       </div>
     ));
+  };
+
+  const renderResults = () => {
+    if (loading) {
+      return <div className="loading">Executing query...</div>;
+    }
+
+    if (!results) {
+      return <div className="no-results">Execute a query to see results</div>;
+    }
+
+    if (!results.rows || results.rows.length === 0) {
+      return <div className="no-results">No results to display</div>;
+    }
+
+    return (
+      <>
+        <div className="results-header">
+          <div className="results-info">
+            {results.rows.length.toLocaleString()} rows
+            {executionTime && ` • ${executionTime}ms`}
+          </div>
+          <button className="export-button" onClick={handleExportCSV}>
+            Export CSV
+          </button>
+        </div>
+        <table className="results-table">
+          <thead>
+            <tr>
+              {results.columns.map((column) => (
+                <th key={column}>{column}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {results.rows.map((row, index) => (
+              <tr key={index}>
+                {results.columns.map((column) => (
+                  <td key={column}>{row[column]}</td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </>
+    );
   };
 
   return (
@@ -292,6 +444,18 @@ const QueryRunner = () => {
             <h1>SQL Query Runner</h1>
             <ThemeToggle />
           </div>
+          <div className="header-actions">
+            <button
+              className="save-query-button"
+              onClick={handleSaveClick}
+              title="Save current query to favorites"
+            >
+              Save ⭐
+            </button>
+            <button className="execute-button" onClick={handleExecute}>
+              Execute Query
+            </button>
+          </div>
         </div>
 
         <div className="editor-section">
@@ -328,51 +492,9 @@ const QueryRunner = () => {
               }}
             />
           </div>
-          <button className="execute-button" onClick={handleExecute}>
-            Execute
-          </button>
         </div>
 
-        <div className="results-section">
-          <div className="results-header">
-            <h2>
-              Results{" "}
-              {results.rows.length > 0 ? `(${results.rows.length} rows)` : ""}
-            </h2>
-            <button className="export-button" onClick={handleExportCSV}>
-              Export CSV
-            </button>
-          </div>
-
-          {executionTime && (
-            <div className="execution-time">
-              Query executed in {executionTime}ms
-            </div>
-          )}
-
-          {loading ? (
-            <div className="loading">Executing query...</div>
-          ) : (
-            <table className="results-table">
-              <thead>
-                <tr>
-                  {results.columns.map((column) => (
-                    <th key={column}>{column}</th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {results.rows.map((row, index) => (
-                  <tr key={index}>
-                    {results.columns.map((column) => (
-                      <td key={column}>{row[column]}</td>
-                    ))}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          )}
-        </div>
+        <div className="results-section">{renderResults()}</div>
       </div>
 
       {showAddQueryModal && (
@@ -433,6 +555,55 @@ const QueryRunner = () => {
               <button className="save-button" onClick={handleAddQuery}>
                 Save Query
               </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showSaveModal && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <h2>Save Custom Query</h2>
+            <div className="modal-form">
+              <div className="form-group">
+                <label>Query Name</label>
+                <input
+                  type="text"
+                  value={customQuery.title}
+                  onChange={(e) =>
+                    setCustomQuery({ ...customQuery, title: e.target.value })
+                  }
+                  placeholder="Enter a name for your query"
+                />
+              </div>
+              <div className="form-group">
+                <label>Description (Optional)</label>
+                <textarea
+                  value={customQuery.description}
+                  onChange={(e) =>
+                    setCustomQuery({
+                      ...customQuery,
+                      description: e.target.value,
+                    })
+                  }
+                  placeholder="Enter a description"
+                />
+              </div>
+              <div className="query-preview">
+                <label>Query</label>
+                <pre>{customQuery.query}</pre>
+              </div>
+              <div className="modal-actions">
+                <button
+                  className="cancel-button"
+                  onClick={() => setShowSaveModal(false)}
+                >
+                  Cancel
+                </button>
+                <button className="save-button" onClick={handleSaveCustomQuery}>
+                  Save to Favorites
+                </button>
+              </div>
             </div>
           </div>
         </div>

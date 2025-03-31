@@ -139,6 +139,31 @@
   font-weight: 600;
 }
 
+.header-actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.save-query-button {
+  padding: 8px 16px;
+  background-color: transparent;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  color: var(--text-primary);
+  cursor: pointer;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s;
+}
+
+.save-query-button:hover {
+  border-color: var(--accent-primary);
+  color: var(--accent-primary);
+}
+
 .editor-section {
   margin-top: 80px;
   background: white;
@@ -188,11 +213,12 @@
 }
 
 .results-header {
-  padding: 20px;
-  border-bottom: 1px solid #e1e4e8;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 8px 16px;
+  background-color: var(--bg-secondary);
+  border-bottom: 1px solid var(--border-color);
 }
 
 .results-header h2 {
@@ -201,7 +227,27 @@
   margin: 0;
 }
 
-.export-button, .copy-button {
+.results-info {
+  color: var(--text-primary);
+  font-size: 0.9em;
+}
+
+.export-button {
+  padding: 4px 8px;
+  background-color: transparent;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.export-button:hover {
+  border-color: var(--accent-primary);
+  color: var(--accent-primary);
+}
+
+.copy-button {
   padding: 8px 16px;
   background-color: white;
   border: 1px solid #d0d7de;
@@ -215,7 +261,7 @@
   transition: all 0.2s;
 }
 
-.export-button:hover, .copy-button:hover {
+.copy-button:hover {
   background-color: #f3f4f6;
   border-color: #b1b7be;
   transform: translateY(-1px);
@@ -389,4 +435,35 @@
 
 .save-button:hover {
   background-color: var(--accent-hover);
+}
+
+.query-preview {
+  margin-top: 16px;
+}
+
+.query-preview label {
+  display: block;
+  font-weight: 500;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+
+.query-preview pre {
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  padding: 12px;
+  overflow-x: auto;
+  color: var(--text-primary);
+  font-family: 'Roboto Mono', monospace;
+  font-size: 13px;
+  max-height: 150px;
+  overflow-y: auto;
+}
+
+.no-results {
+  padding: 32px;
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 0.9em;
 }
