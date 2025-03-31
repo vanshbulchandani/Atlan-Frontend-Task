@@ -250,3 +250,8 @@
   cursor: pointer;
   color: var(--text-secondary);
 }
+
+.app {
+  min-height: 100vh;
+  position: relative;
+}

@@ -67,8 +67,8 @@ To enhance performance and reduce page load time, the following optimizations we
 
 - GitHub Repository: https://github.com/vanshbulchandani/frontend-2025-test
 - Live Demo: https://sqleditor123.netlify.app/
-- Architecture Diagram & Documentation: [Provide relevant links]
-- Video Walkthrough: [Provide video link]
+- Architecture Diagram & Documentation: https://docs.google.com/document/d/1eezuh8KKMCYGPSeBP9w10XQGU8TQoZ1bLOuj1wNzSBw/edit?usp=sharing
+- Video Walkthrough: https://drive.google.com/file/d/16KWr9KWU_ybx6iOmeesrOeAbzemEIi8H/view?usp=drive_link
 
 ## ✅ Judging Criteria Considerations
 

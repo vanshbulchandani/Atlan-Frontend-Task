@@ -4,6 +4,7 @@ import LandingPage from "./components/LandingPage";
 import QueryRunner from "./components/QueryRunner";
 import { ThemeProvider } from "./context/ThemeContext";
 import "./App.css";
+import Footer from "./components/Footer";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
           <Route path="/query" element={<QueryRunner />} />
         </Routes>
       </Router>
+      <Footer />
     </ThemeProvider>
   );
 }
