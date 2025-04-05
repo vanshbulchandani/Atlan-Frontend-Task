@@ -189,6 +189,7 @@ const QueryRunner = () => {
     description: "",
     query: "",
   });
+  const [searchQuery, setSearchQuery] = useState("");
 
   const handleQuerySelect = (query) => {
     setSelectedQuery(query);
@@ -310,13 +311,24 @@ const QueryRunner = () => {
     setShowSaveModal(false);
   };
 
+  const filterQueries = (queries) => {
+    return queries.filter(
+      (q) =>
+        q.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        q.description.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  };
+
   const renderQueryList = () => {
-    const queries =
+    let queries =
       activeTab === "Predefined"
         ? [...PREDEFINED_QUERIES, ...userQueries]
         : activeTab === "Favorites"
         ? favorites
         : queryHistory;
+
+    // Apply search filter
+    queries = filterQueries(queries);
 
     return queries.map((q, index) => (
       <div key={q.id || index} className="query-item">
@@ -402,7 +414,12 @@ const QueryRunner = () => {
     <div className="app-container">
       <div className="sidebar">
         <div className="search-box">
-          <input type="text" placeholder="Search queries..." />
+          <input
+            type="text"
+            placeholder="Search queries..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
         </div>
 
         <div className="nav-tabs">
