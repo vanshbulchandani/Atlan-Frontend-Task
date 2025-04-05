@@ -205,6 +205,7 @@ const QueryRunner = () => {
       query: query,
       timestamp: new Date().toISOString(),
       title: selectedQuery?.title || "Custom Query",
+      description: selectedQuery?.description || "",
     };
     setQueryHistory((prev) => [historyItem, ...prev]);
 
@@ -312,6 +313,13 @@ const QueryRunner = () => {
   };
 
   const filterQueries = (queries) => {
+    if (activeTab === "History") {
+      return queries.filter(
+        (q) =>
+          q.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          q.query.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
     return queries.filter(
       (q) =>
         q.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
